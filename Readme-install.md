@@ -180,4 +180,6 @@ pnpm install -g react-devtools
 
 pnpm install -D babel-plugin-react-compiler@rc eslint-plugin-react-hooks@^6.0.0-rc.1
 
+pnpm add -D @types/react-router-dom
+
 ```
