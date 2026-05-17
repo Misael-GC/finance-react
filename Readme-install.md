@@ -171,3 +171,13 @@ Al instalar dependencias nuevas, es una excelente práctica como ingeniero corre
 pnpm audit
 
 ```
+
+
+----
+## INSTALAR DEPENDENCIAS
+```bash
+pnpm install -g react-devtools
+
+pnpm install -D babel-plugin-react-compiler@rc eslint-plugin-react-hooks@^6.0.0-rc.1
+
+```
