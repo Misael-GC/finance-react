@@ -70,3 +70,104 @@ Ahora que el archivo está listo, ya puedes ejecutar con total seguridad:
 pnpm install
 
 ```
+
+----
+
+Para instalar **Tailwind CSS** en tu nuevo proyecto de React + Vite usando `pnpm`, debemos seguir manteniendo la misma línea de seguridad estricta que configuramos en el archivo `.npmrc`.
+
+Dado que estamos usando la arquitectura moderna de Vite y React, utilizaremos el nuevo motor **Tailwind CSS v4**, el cual ya no requiere archivos de configuración complejos como `tailwind.config.js` ni `postcss.config.js`, sino que se integra nativamente mediante un plugin de Vite. Esto reduce la superficie de ataque y hace el código mucho más limpio.
+
+Sigue estos pasos estructurados en tu terminal de Linux:
+
+---
+
+## 1. Instalar Tailwind CSS y su plugin de Vite
+
+Asegúrate de estar en la raíz de tu proyecto y ejecuta el siguiente comando para instalar Tailwind y su integración oficial para Vite como dependencias de desarrollo (`-D`):
+
+```bash
+pnpm add -D tailwindcss @tailwindcss/vite
+
+```
+
+---
+
+## 2. Configurar el Plugin en Vite (`vite.config.ts`)
+
+Abre el archivo `vite.config.ts` que se encuentra en la raíz de tu proyecto. Vamos a importar el plugin de Tailwind y añadirlo a la propiedad `plugins`.
+
+Tu archivo debe quedar estructurado de la siguiente manera:
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite' // 1. Importar el plugin
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(), // 2. Inyectar el plugin en el bundler
+  ],
+})
+
+```
+
+---
+
+## 3. Importar Tailwind en tu CSS (`src/index.css`)
+
+Abre el archivo de estilos principales de tu aplicación, que usualmente es `src/index.css`.
+
+Borra todo el contenido de demostración que Vite crea por defecto y coloca únicamente la siguiente directiva en la primera línea. En Tailwind v4, esto es todo lo que necesitas para importar todo el framework:
+
+```css
+@import "tailwindcss";
+
+```
+
+---
+
+## 4. Limpieza de Componentes y Prueba de Funcionamiento
+
+Para verificar que todo esté acoplado correctamente y los estilos CSS se estén procesando bien, edita tu archivo `src/App.tsx`. Reemplaza su contenido con este componente limpio para probar las clases utilitarias de Tailwind:
+
+```tsx
+export default function App() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-900 text-white">
+      <div className="rounded-xl bg-slate-800 p-8 shadow-2xl border border-slate-700 text-center">
+        <h1 className="text-4xl font-extrabold tracking-tight text-cyan-400 mb-2">
+          ¡React + Vite + Tailwind Listo!
+        </h1>
+        <p className="text-slate-400 font-medium">
+          Entorno de desarrollo blindado y optimizado con <code className="text-amber-400 font-mono">pnpm</code> en Linux.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+```
+
+---
+
+## 5. Levantar el Servidor de Desarrollo
+
+Ahora puedes arrancar tu entorno local en Linux ejecutando:
+
+```bash
+pnpm dev
+
+```
+
+Abre el enlace que te provee la terminal (normalmente `http://localhost:5173`) en tu navegador. Deberías ver una tarjeta estilizada con fondo oscuro, tipografía moderna y bordes perfectos.
+
+### Un último consejo de seguridad
+
+Al instalar dependencias nuevas, es una excelente práctica como ingeniero correr el auditor que preparamos en tus *aliases* de Linux para asegurar que ninguna sub-dependencia de Tailwind haya introducido alertas:
+
+```bash
+pnpm audit
+
+```

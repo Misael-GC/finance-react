@@ -1,35 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-900 text-white">
+      <div className="rounded-xl bg-slate-800 p-8 shadow-2xl border border-slate-700 text-center">
+        <h1 className="text-4xl font-extrabold tracking-tight text-cyan-400 mb-2">
+          ¡React + Vite + Tailwind Listo!
+        </h1>
+        <p className="text-slate-400 font-medium">
+          Entorno de desarrollo blindado y optimizado con <code className="text-amber-400 font-mono">pnpm</code> en Linux.
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
-export default App
+
