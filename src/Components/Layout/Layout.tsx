@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex flex-col md:flex-row h-screen">
       {/* Menú Lateral */}
       <SideMenu />
 
