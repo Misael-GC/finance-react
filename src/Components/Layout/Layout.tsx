@@ -1,15 +1,13 @@
-import { ReactNode } from "react";
+
+import { Outlet } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
-// import Footer from "../Footer/Footer";
 import SideMenu from "../SideMenu/SideMenu";
+import Footer from "../Footer/Footer";
 
-interface LayoutProps {
-  children: ReactNode;
-}
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
   return (
-    <div className="flex flex-col md:flex-row h-screen">
+    <div className="flex md:flex-row h-screen bg-slate-100"> 
       {/* Menú Lateral */}
       <SideMenu />
 
@@ -19,8 +17,9 @@ export default function Layout({ children }: LayoutProps) {
         <Navbar />
 
         {/* Contenido Dinámico de la Página (Ej. Home) */}
-        <main className="flex-1 overflow-y-auto p-6">
-            {children}
+        <main className="flex-1 overflow-y-auto p- h-screen6">
+            <Outlet />
+            <Footer />
         </main>
       </div>
     </div>
