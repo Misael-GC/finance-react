@@ -22,7 +22,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="space-y-6 h-screen">
+    <div className="space-y-6 ">
       <h2 className="text-2xl font-bold">Resumen de Mercado</h2>
 
       {/* Cinta de Indicadores (Top Bar) -> /v2/indices, /v2/divisas, /v2/commodities */}

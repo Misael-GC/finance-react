@@ -31,8 +31,10 @@ export default function Layout() {
         <Navbar onToggleMenu={toggleMenu}/>
 
         {/* Contenido Dinámico de la Página (Ej. Home) */}
-        <main className="flex-1 overflow-y-auto p- h-screen6">
-            <Outlet />
+        <main className="flex-1 overflow-y-auto flex flex-col">
+            <div className="flex-1 p-4 md:p-6">
+              <Outlet />
+            </div>
             <Footer />
         </main>
       </div>
