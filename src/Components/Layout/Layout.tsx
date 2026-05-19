@@ -1,29 +1,26 @@
 
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
+import { useUI } from "../../Context/UIContext";
 import Navbar from "../Navbar/Navbar";
 import SideMenu from "../SideMenu/SideMenu";
 import Footer from "../Footer/Footer";
 
 
 export default function Layout() {
-  //usar context y provider para manejar el estado global de la app (ej. user info, theme, etc.) [8] --- IGNORE ---
-  // Inicializamos en true para que en laptops inicie abierto por defecto
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
-  // Función para alternar el estado
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  const { isMenuOpen, toggleMenu } = useUI();
   return (
     <div className="flex flex-col md:flex-row h-screen bg-slate-100 overflow-hidden"> 
       {
         isMenuOpen && (
           <div 
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setIsMenuOpen(false)}
+          onClick={() => toggleMenu}
         />
         )}
       {/* Menú Lateral */}
-      <SideMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <SideMenu isOpen={isMenuOpen} onClose={() => toggleMenu()} />
 
       {/* Área Principal */}
       <div className="flex-1 flex flex-col overflow-hidden">

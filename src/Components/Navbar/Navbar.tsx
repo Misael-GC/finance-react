@@ -1,8 +1,11 @@
+import { useUI } from '../../Context/UIContext';
+
 interface NavbarProps {
   onToggleMenu: () => void;
 }
 
-export default function Navbar({ onToggleMenu }: NavbarProps) {
+export default function Navbar() {
+  const { toggleMenu } = useUI();
   return (
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 z-10">
       <div className="flex items-center space-x-3 w-full md:w-1/3">
@@ -15,7 +18,7 @@ export default function Navbar({ onToggleMenu }: NavbarProps) {
       </div>
       <div className="flex items-center space-x-4">
         <button 
-          onClick={onToggleMenu}
+          onClick={toggleMenu}
           className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 focus:outline-none"
           aria-label="Abrir menú"
         >

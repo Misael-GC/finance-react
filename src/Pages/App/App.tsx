@@ -1,4 +1,5 @@
 import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { UIProvider } from '../../Context/UIContext';
 import Layout from '../../Components/Layout/Layout';
 import Home from '../Home/Home';
 import MyAccount from '../MyAccount/MyAccount';
@@ -25,9 +26,9 @@ const AppRoutes = () => {
 export default function App() {
   return (
     <BrowserRouter>
-      {/* El Layout actúa como contenedor principal envolviendo el enrutador dinámico */}
-   
+      <UIProvider>
         <AppRoutes />
+      </UIProvider>
 
     </BrowserRouter>
   );

@@ -1,11 +1,9 @@
 import { NavLink } from 'react-router-dom';
+import { useUI } from '../../Context/UIContext';
 
-interface SideMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
-export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
+export default function SideMenu() {
+  const { isMenuOpen, closeMenu } = useUI();
   return (
     <aside className={`
       /* Capa base: Estructura, contención y transición fluida */
@@ -14,18 +12,18 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
       
       /* Comportamiento Móvil: Fijo y superpuesto (Overlay) */
       fixed inset-y-0 left-0 h-full
-      ${isOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
+      ${isMenuOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'}
       
       /* Comportamiento Escritorio (md+): En flujo de Flexbox empujando (Push) */
       md:relative md:translate-x-0
-      ${isOpen ? 'md:w-64' : 'md:w-0 md:border-none'}
+      ${isMenuOpen ? 'md:w-64' : 'md:w-0 md:border-none'}
     `}>
       <div className="h-16 flex items-center justify-between px-6 border-b border-slate-700 min-w-[16rem]">
         <h1 className="text-xl font-bold">MarketTrack</h1>
         
         {/* Botón de cerrar interno: Sigue siendo solo visible en móvil */}
         <button 
-          onClick={onClose}
+          onClick={closeMenu}
           className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white md:hidden focus:outline-none"
           aria-label="Cerrar menú"
         >
@@ -36,9 +34,9 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2 min-w-[16rem]">
-        <NavLink to="/" onClick={onClose} className="block px-4 py-2 rounded hover:bg-slate-800">🏠 Dashboard Principal</NavLink>
-        <NavLink to="/my-account" onClick={onClose} className="block px-4 py-2 rounded hover:bg-slate-800">📈 Mercado Local</NavLink>
-        <NavLink to="/sig-in" onClick={onClose} className="block px-4 py-2 rounded hover:bg-slate-800">🌎 Entorno Macro</NavLink>
+        <NavLink to="/" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">🏠 Dashboard Principal</NavLink>
+        <NavLink to="/my-account" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">📈 Mercado Local</NavLink>
+        <NavLink to="/sig-in" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">🌎 Entorno Macro</NavLink>
       </nav>
     </aside>
   );
