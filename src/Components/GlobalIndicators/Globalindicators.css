@@ -1,19 +1,35 @@
+.carousel {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Este contenedor interno agrupa TODOS los elementos (originales + copia) */
+.carousel-track {
+  display: flex;
+  width: max-content; /* Asegura que no se aplasten los elementos */
+  gap: 1rem; /* Reemplaza el space-x de Tailwind para evitar bugs con la animación */
+  will-change: transform;
+  animation: scrolling 50s linear infinite;
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Se desplaza exactamente la mitad del contenedor (la lista original), */
+    /* dejando la lista duplicada posicionada idénticamente al inicio. */
+    transform: translateX(-50%); 
+  }
+}
+
+.carousel:hover .carousel-track {
+  animation-play-state: paused;
+}
+
 .groups {
-    /* ... */
-    will-change: transform; /* Deberíamos ser amables con el navegador: hazle saber qué vamos a animar. */
-    animation: scrolling 10s linear infinite;
-  }
-
- @keyframes scrolling {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-
-
-    .carousel:hover .groups {
-      animation-play-state: paused;
-    }
+  flex-shrink: 0;
+}

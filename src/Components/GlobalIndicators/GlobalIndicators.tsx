@@ -27,29 +27,48 @@ export default function GlobalIndicators() {
         { ticker: 'ASX 200', u: 7000.10, c: 0.3 },
       ]);
       setLoading(false);
-    }, 2000);
+    }, 1000);
 
-    return () => clearTimeout(timer); // Limpieza del timeout si el componente se desmonta
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    // <div className="flex items-center space-x-4 overflow-x-auto pb-2 scrollbar-hide carousel">
-    <div className="flex items-center space-x-4 pb-2 carousel w-[80%]">
+    <div className="carousel w-full pb-2">
       {loading ? (
         <p className="text-slate-400">Cargando indicadores...</p>
       ) : (
-        indices.map((ind, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
-          >
-            <span className="text-sm font-bold text-white">{ind.ticker}:</span>
-            <span className="text-sm text-slate-300">{ind.u}</span>
-            <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-              ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
-            </span>
-          </div>
-        ))
+        /* La tira que contiene los elementos y que ejecuta la animación */
+        <div className="carousel-track">
+          
+          {/* PRIMERA VUELTA: Elementos Originales */}
+          {indices.map((ind, index) => (
+            <div
+              key={`orig-${index}`}
+              className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
+            >
+              <span className="text-sm font-bold text-white">{ind.ticker}:</span>
+              <span className="text-sm text-slate-300">{ind.u}</span>
+              <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
+              </span>
+            </div>
+          ))}
+
+          {/* SEGUNDA VUELTA: Duplicado exacto para crear la ilusión de bucle infinito */}
+          {indices.map((ind, index) => (
+            <div
+              key={`dup-${index}`}
+              className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
+            >
+              <span className="text-sm font-bold text-white">{ind.ticker}:</span>
+              <span className="text-sm text-slate-300">{ind.u}</span>
+              <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
+              </span>
+            </div>
+          ))}
+
+        </div>
       )}
     </div>
   );
