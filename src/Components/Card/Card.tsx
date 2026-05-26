@@ -1,7 +1,9 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 interface CardProps {
   title?: string;
+  titleHref?: string;
   subtitle?: string;
   image?: string;
   imageAlt?: string;
@@ -12,6 +14,7 @@ interface CardProps {
 export default function Card({
   title,
   subtitle,
+  titleHref,
   image,
   imageAlt = 'Card image',
   children,
@@ -53,8 +56,22 @@ export default function Card({
         )}
         
         {title && (
-          <h3 className="text-xl font-bold text-white tracking-tight leading-snug mb-2 group-hover:text-cyan-300 transition-colors duration-200">
-            {title}
+          <h3 className="text-xl font-bold text-white tracking-tight leading-snug mb-2 transition-colors duration-200">
+            {titleHref ? (
+              /* Si tiene un href, envolvemos el texto en un Link interactivo */
+              <Link
+                to={titleHref}
+                onClick={(e) => e.stopPropagation()} // Evita activar el onClick del contenedor padre
+                className="hover:text-cyan-400 transition-colors duration-200 hover:underline decoration-cyan-500/40 underline-offset-4"
+              >
+                {title}
+              </Link>
+            ) : (
+              /* Si no tiene href, hereda el comportamiento por defecto y el hover del contenedor */
+              <span className="group-hover:text-cyan-300 transition-colors duration-200">
+                {title}
+              </span>
+            )}
           </h3>
         )}
 

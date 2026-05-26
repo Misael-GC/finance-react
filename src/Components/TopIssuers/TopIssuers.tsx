@@ -51,7 +51,7 @@ export default function TopIssuers() {
   }, [apiToken]);
 
   return (
-    <Card title="Top de Emisoras" subtitle="Mercado Local/Global">
+    <Card title="Top de Emisoras" subtitle="Mercado Local/Global" titleHref="/emisoras">
       {loading ? (
         <p className="text-slate-400 text-xs mt-2 animate-pulse">Cargando ranking...</p>
       ) : error ? (
