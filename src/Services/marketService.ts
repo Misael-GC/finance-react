@@ -6,6 +6,12 @@ export interface IndexItem {
   c: number; // Cambio porcentual
 }
 
+export interface IssuerTopItem {
+  ticker: string;
+  percentageChange: number; // Porcentaje de cambio mapeado de forma limpia
+  price?: number; // Precio actual, opcional si se desea incluir
+}
+
 export const marketService = {
   async getGlobalIndicators(token: string): Promise<IndexItem[]> {
     if (!token) {
@@ -45,6 +51,50 @@ export const marketService = {
       return [];
     } catch (error) {
       console.error('Failed to fetch global indicators:', error);
+      throw error;
+    }
+  },
+
+  async getTopIssuers(token: string): Promise<IssuerTopItem[]> {
+    if (!token) {
+      throw new Error('API token is required to fetch top issuers');
+    }
+
+    try {
+      // Consumimos el endpoint con los parámetros idénticos a los de tu consulta funcional
+      const response = await fetch(
+        `${BASE_URL}/top?token=${token}&variables=suben&bolsa=BMV&cantidad=20&mercado=local`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error fetching top issuers: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data && typeof data === 'object') {
+        /**
+         * Buscamos de forma dinámica el arreglo de emisoras.
+         * Esto previene fallos si la clave viene como 'SUBEN', 'suben', 'BAJAN', etc.
+         */
+        const key = Object.keys(data).find(
+          (k) => k.toLowerCase() === 'suben' || k.toLowerCase() === 'bajan' || Array.isArray(data[k])
+        );
+
+        const rawList = key ? data[key] : [];
+
+        if (Array.isArray(rawList)) {
+          return rawList.map((item: any) => ({
+            ticker: String(item.e || 'UNKNOWN'),
+            percentageChange: Number(item.c || 0),
+            price: Number(item.u || 0),
+          }));
+        }
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Failed to fetch top issuers:', error);
       throw error;
     }
   }

@@ -1,6 +1,7 @@
 
 import Card from '../../Components/Card/Card';
 import GlobalIndicators from '../../Components/GlobalIndicators/GlobalIndicators';
+import TopIssuers from '../../Components/TopIssuers/TopIssuers';
 
 export default function Home() {
 
@@ -15,22 +16,7 @@ export default function Home() {
         
         {/* COLUMNA IZQUIERDA: Panel de Mercado y Rankings (Ocupa 1/4) */}
         <div className="flex flex-col space-y-2 lg:col-span-1">
-          <Card title="Top de Emisoras" subtitle="Mercado Local/Global">
-            <ul className="space-y-3 mt-2">
-              <li className="flex justify-between border-b border-slate-700 pb-2">
-                <span className="text-white">WALMEX</span>
-                <span className="text-emerald-400">+3.1%</span>
-              </li>
-              <li className="flex justify-between border-b border-slate-700 pb-2">
-                <span className="text-white">AMX</span>
-                <span className="text-rose-400">-1.5%</span>
-              </li>
-              <li className="flex justify-between border-b border-slate-700 pb-2">
-                <span className="text-white">CEMEX</span>
-                <span className="text-emerald-400">+3.0%</span>
-              </li>
-            </ul>
-          </Card>
+          <TopIssuers />
 
           <Card title="Monitor de Divisas" subtitle="Tipos de Cambio">
             <ul className="space-y-3 mt-2">
