@@ -1,75 +1,104 @@
 import { useState, useEffect } from 'react';
+import { useUI } from '../../Context/UIContext';
+import { marketService, type IndexItem } from '../../Services/marketService';
 import './Globalindicators.css';
 
-interface IndexItem {
-  ticker: string;
-  u: number;
-  c: number;
-}
-
 export default function GlobalIndicators() {
+  const { apiToken } = useUI(); // Obtenemos el token desde el Contexto global
   const [indices, setIndices] = useState<IndexItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIndices([
-        { ticker: 'SSP 500', u: 5500.20, c: 1.5 },
-        { ticker: 'NASDAQ', u: 15200.50, c: 1.5 },
-        { ticker: 'IPC MÉXICO', u: 55100.10, c: -0.5 },
-        { ticker: 'DAX', u: 16100.80, c: 0.8 },
-        { ticker: 'FTSE 100', u: 7500.20, c: 0.6 },
-        { ticker: 'NIKKEI 225', u: 28000.50, c: -0.3 },
-        { ticker: 'HANG SENG', u: 25000.10, c: 0.2 },
-        { ticker: 'S&P/TSX', u: 20000.80, c: 0.4 },
-        { ticker: 'IBEX 35', u: 9000.20, c: -0.1 },
-        { ticker: 'CAC 40', u: 7000.50, c: 0.9 },
-        { ticker: 'ASX 200', u: 7000.10, c: 0.3 },
-      ]);
-      setLoading(false);
-    }, 1000);
+    let isMounted = true;
 
-    return () => clearTimeout(timer);
-  }, []);
+    async function fetchIndicators() {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        if (!apiToken) {
+            console.warn("El token de la API aún no está disponible.");
+            return; 
+        }
+        // Consumo del servicio desacoplado
+        const data = await marketService.getGlobalIndicators(apiToken);
+        
+        if (isMounted) {
+          setIndices(data);
+        }
+      } catch (err: any | unknown) {
+        if (isMounted) {
+          setError(err.message || 'Error al cargar los mercados.');
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    if (apiToken) {
+      fetchIndicators();
+    } else {
+      setLoading(false);
+      setError('Configuración incompleta: Falta el Token de la API.');
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [apiToken]);
+
+  if (loading) {
+    return (
+      <div className="carousel w-full pb-2">
+        <p className="text-slate-400 text-sm animate-pulse">Conectando con DataBursatil...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="carousel w-full pb-2">
+        <p className="text-rose-400 text-sm">⚠️ {error}  ¯\_(ツ)_/¯</p>
+      </div>
+    );
+  }
 
   return (
     <div className="carousel w-full pb-2">
-      {loading ? (
-        <p className="text-slate-400">Cargando indicadores...</p>
-      ) : (
-        /* La tira que contiene los elementos y que ejecuta la animación */
-        <div className="carousel-track">
-          
-          {/* PRIMERA VUELTA: Elementos Originales */}
-          {indices.map((ind, index) => (
-            <div
-              key={`orig-${index}`}
-              className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
-            >
-              <span className="text-sm font-bold text-white">{ind.ticker}:</span>
-              <span className="text-sm text-slate-300">{ind.u}</span>
-              <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
-              </span>
-            </div>
-          ))}
+      <div className="carousel-track">
+        
+        {/* Renderizado de Elementos Originales */}
+        {indices.map((ind, index) => (
+          <div
+            key={`orig-${ind.ticker}-${index}`}
+            className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
+          >
+            <span className="text-sm font-bold text-white">{ind.ticker}:</span>
+            <span className="text-sm text-slate-300">{ind.u}</span>
+            <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
+            </span>
+          </div>
+        ))}
 
-          {/* SEGUNDA VUELTA: Duplicado exacto para crear la ilusión de bucle infinito */}
-          {indices.map((ind, index) => (
-            <div
-              key={`dup-${index}`}
-              className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
-            >
-              <span className="text-sm font-bold text-white">{ind.ticker}:</span>
-              <span className="text-sm text-slate-300">{ind.u}</span>
-              <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
-              </span>
-            </div>
-          ))}
+        {/* Duplicado exacto para preservar el efecto visual de carrusel infinito */}
+        {indices.map((ind, index) => (
+          <div
+            key={`dup-${ind.ticker}-${index}`}
+            className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
+          >
+            <span className="text-sm font-bold text-white">{ind.ticker}:</span>
+            <span className="text-sm text-slate-300">{ind.u}</span>
+            <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
+            </span>
+          </div>
+        ))}
 
-        </div>
-      )}
+      </div>
     </div>
   );
 }

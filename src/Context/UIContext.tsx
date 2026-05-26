@@ -4,18 +4,20 @@ interface UIContextType {
   isMenuOpen: boolean;
   toggleMenu: () => void;
   closeMenu: () => void;
+  apiToken?: string;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export const UIProvider = ({ children }: { children: ReactNode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);
+  const apiToken = import.meta.env.VITE_DATABURSATIL_TOKEN || 'token_no_proporcionado';
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
 
     return (
-    <UIContext.Provider value={{ isMenuOpen, toggleMenu, closeMenu }}>
+    <UIContext.Provider value={{ isMenuOpen, toggleMenu, closeMenu, apiToken }}>
       {children}
     </UIContext.Provider>
   );
