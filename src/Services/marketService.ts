@@ -172,7 +172,6 @@ export const marketService = {
       if (!response.ok) throw new Error(`Error intraday fetch: ${response.statusText}`);
       
       const data = await response.json();
-      //console.log("JSON crudo recibido de la API intradía:", data);
 
       // Buscamos dinámicamente el contenido del ticker (ya sea data["WALMEX*"] o el primer objeto que venga)
       const rawContent = data[ticker] || Object.values(data)[0];
@@ -236,7 +235,6 @@ export const marketService = {
       if (!response.ok) throw new Error(`Error historical fetch: ${response.statusText}`);
 
       const data = await response.json();
-      console.log("JSON crudo recibido de la API de históricos:", data);
 
       if (data && typeof data === 'object' && !Array.isArray(data)) {
         // Recorremos las llaves del objeto (que representan las fechas)
@@ -279,7 +277,6 @@ export const marketService = {
       if (!response.ok) throw new Error(`Error fetching company profile: ${response.statusText}`);
 
       const data = await response.json();
-      console.log("JSON crudo de Perfil Corporativo:", data);
 
       if (data && typeof data === 'object' && !Array.isArray(data)) {
         // Buscamos dinámicamente la clave que coincida con el ticker solicitado
