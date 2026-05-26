@@ -2,6 +2,7 @@
 import Card from '../../Components/Card/Card';
 import GlobalIndicators from '../../Components/GlobalIndicators/GlobalIndicators';
 import MarketRankingList from '../../Components/MarketRankingList/MarketRankingList';
+import IntradayChart from '../../Components/IntradayChart/IntradayChart';
 import { marketService } from '../../Services/marketService';
 
 export default function Home() {
@@ -46,11 +47,7 @@ export default function Home() {
         <div className="flex flex-col lg:col-span-2">
           {/* Al envolver el Card en un div, podemos forzar su altura mínima */}
           <div className="min-h-[20rem] flex flex-col h-full">
-            <Card title="Gráficos Intradía" subtitle="/v2/intradia">
-              <div className="flex items-center justify-center h-48 border border-dashed border-slate-600 rounded-lg mt-4">
-                <p className="text-slate-500">Componente de Velas Japonesas (TradingView / Recharts)</p>
-              </div>
-            </Card>
+            <IntradayChart />
           </div>
 
 

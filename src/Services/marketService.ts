@@ -13,6 +13,11 @@ export interface MarketAssetItem {
   price?: number;           // Precio actual
 }
 
+export interface IntradayChartItem {
+  time: string;  // Hora o etiqueta de tiempo (ej: "10:30")
+  price: number; // Precio de cierre mapeado
+}
+
 /**
  * Función helper de mapeo utilitario independiente.
  * Extraída fuera del objeto para respetar SRP (Responsabilidad Única) 
@@ -139,6 +144,63 @@ export const marketService = {
       return mapKeyValueResponse(data);
     } catch (error) {
       console.error('Failed to fetch commodities:', error);
+      throw error;
+    }
+  },
+
+  async getIntradayData(token: string, ticker: string): Promise<IntradayChartItem[]> {
+    if (!token) throw new Error('API token is required');
+    
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const targetTicker = encodeURIComponent(ticker);
+      
+      const response = await fetch(
+        `${BASE_URL}/intradia?token=${token}&intervalo=1m&inicio=${today}&final=${today}&emisora_serie=${targetTicker}&bolsa=BMV`
+      );
+      
+      if (!response.ok) throw new Error(`Error intraday fetch: ${response.statusText}`);
+      
+      const data = await response.json();
+      //console.log("JSON crudo recibido de la API intradía:", data);
+
+      // Buscamos dinámicamente el contenido del ticker (ya sea data["WALMEX*"] o el primer objeto que venga)
+      const rawContent = data[ticker] || Object.values(data)[0];
+
+      // Verificamos si es un objeto Key-Value de marcas de tiempo (como lo muestra tu consola)
+      if (rawContent && typeof rawContent === 'object' && !Array.isArray(rawContent)) {
+        
+        // Transformamos el objeto de marcas de tiempo en un Arreglo ordenado
+        const mappedData = Object.keys(rawContent).map((timestamp) => {
+          // Extraemos la sección de la hora (ej: "2026-05-26 07:30:00" -> "07:30")
+          const timeLabel = timestamp.includes(' ') 
+            ? timestamp.split(' ')[1].substring(0, 5) 
+            : timestamp.substring(0, 5);
+
+          return {
+            time: timeLabel,
+            price: Number(rawContent[timestamp] || 0) // El valor de la propiedad es el precio directo
+          };
+        });
+
+        // Ordenamos los elementos cronológicamente por hora para que el gráfico no se cruce
+        return mappedData.sort((a, b) => a.time.localeCompare(b.time));
+      }
+
+      // Fallback secundario si en algún horario cambiara a arreglo plano
+      if (Array.isArray(rawContent)) {
+        return rawContent.map((item: any) => {
+          const timeLabel = item.f ? item.f.split(' ')[1]?.substring(0, 5) || item.f : '00:00';
+          return {
+            time: timeLabel,
+            price: Number(item.u || item.c || item.p || 0),
+          };
+        });
+      }
+      
+      return [];
+    } catch (error) {
+      console.error(`Failed to fetch intraday data for ${ticker}:`, error);
       throw error;
     }
   }
