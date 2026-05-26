@@ -5,6 +5,7 @@ import MarketRankingList from '../../Components/MarketRankingList/MarketRankingL
 import IntradayChart from '../../Components/IntradayChart/IntradayChart';
 import { marketService } from '../../Services/marketService';
 import HistoricalChart from '../../Components/HistoricalChart/HistoricalChart';
+import CompanyProfile from '../../Components/CompanyProfile/CompanyProfile';
 
 export default function Home() {
 
@@ -60,13 +61,7 @@ export default function Home() {
 
         {/* COLUMNA DERECHA: Detalle de Emisora y Datos (Ocupa 1/4) */}
         <div className="flex flex-col space-y-2 lg:col-span-1">
-          <Card title="Perfil de la Empresa" subtitle="/v2/emisoras">
-            <div className="mt-2 text-xs space-y-2">
-              <p><strong className="text-white">Emisora:</strong> WALMEX</p>
-              <p><strong className="text-white">Razón Social:</strong> Wal-Mart de México, S.A.B.</p>
-              <p><strong className="text-white">Sector:</strong> Consumo Frecuente</p>
-            </div>
-          </Card>
+          <CompanyProfile />
 
           <Card title="Análisis Fundamental" subtitle="/v2/financieros">
             <div className="mt-2 text-xs space-y-2 text-cyan-400 cursor-pointer">

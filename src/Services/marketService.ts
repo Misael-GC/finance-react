@@ -23,6 +23,16 @@ export interface HistoricalChartItem {
   price: number; // Precio al cierre del día
 }
 
+export interface CompanyProfileItem {
+  ticker: string;
+  corporateName: string;      // Razón social mapeada
+  marketSector: string;       // Descripción del tipo de valor o sector
+  isin?: string;
+  exchange?: string;          // Bolsa de origen
+  status?: string;            // Estatus actual
+  sharesInCirculation?: number; // Acciones en circulación
+}
+
 function mapKeyValueResponse(data: any): MarketAssetItem[] {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return [];
@@ -251,6 +261,56 @@ export const marketService = {
       return [];
     } catch (error) {
       console.error(`Failed to fetch historical data for ${ticker}:`, error);
+      throw error;
+    }
+  },
+
+  async getCompanyProfile(token: string, ticker: string): Promise<CompanyProfileItem | null> {
+    if (!token) throw new Error('API token is required');
+
+    try {
+      // Limpiamos el asterisco de búsqueda si existiera para el query de coincidencia
+      const searchLetter = ticker.replace('*', '');
+      
+      const response = await fetch(
+        `${BASE_URL}/emisoras?token=${token}&letra=${searchLetter}&mercado=local`
+      );
+
+      if (!response.ok) throw new Error(`Error fetching company profile: ${response.statusText}`);
+
+      const data = await response.json();
+      console.log("JSON crudo de Perfil Corporativo:", data);
+
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        // Buscamos dinámicamente la clave que coincida con el ticker solicitado
+        const matchedKey = Object.keys(data).find(
+          (key) => key.toUpperCase().replace('*', '') === searchLetter.toUpperCase()
+        );
+
+        const targetData = matchedKey ? data[matchedKey] : null;
+
+        // Si la estructura viene anidada por series (ej: data["WALMEX"]["*"]) extraemos el primer registro del objeto interno
+        if (targetData && typeof targetData === 'object' && !Array.isArray(targetData)) {
+          const firstSeriesKey = Object.keys(targetData)[0];
+          const profile = targetData[firstSeriesKey];
+
+          if (profile) {
+            return {
+              ticker: matchedKey || ticker,
+              corporateName: String(profile.razon_social || 'No disponible'),
+              marketSector: String(profile.tipo_valor_descripcion || 'Capitales - Serie de Acciones'),
+              isin: String(profile.isin || ''),
+              exchange: String(profile.bolsa || 'BMV'),
+              status: String(profile.estatus || 'Activa'),
+              sharesInCirculation: Number(profile.acciones_en_circulacion || 0)
+            };
+          }
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error(`Failed to fetch company profile for ${ticker}:`, error);
       throw error;
     }
   }
