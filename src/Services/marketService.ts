@@ -1,17 +1,48 @@
 const BASE_URL = 'https://api.databursatil.com/v2';
 
+// interfaces del Dominio Financiero (SOLID: Contratos de Tipado Claros)
 export interface IndexItem {
   ticker: string;
   u: number; // Último precio
   c: number; // Cambio porcentual
 }
 
-export interface IssuerTopItem {
+export interface MarketAssetItem {
   ticker: string;
   percentageChange: number; // Porcentaje de cambio mapeado de forma limpia
-  price?: number; // Precio actual, opcional si se desea incluir
+  price?: number;           // Precio actual
 }
 
+/**
+ * Función helper de mapeo utilitario independiente.
+ * Extraída fuera del objeto para respetar SRP (Responsabilidad Única) 
+ * y evitar errores de contexto con 'this' en callbacks asíncronos.
+ */
+function mapKeyValueResponse(data: any): MarketAssetItem[] {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return [];
+  }
+
+  return Object.keys(data)
+    .filter((key) => key !== 't') // Filtramos e ignoramos la propiedad de tiempo raíz "t"
+    .map((key) => {
+      const item = data[key];
+      
+      // Estrategia de Fallback: 
+      // Si tiene 'c' lo toma (divisas); si no, busca 'p' (commodities); por último por defecto 0.
+      const change = item.c !== undefined ? item.c : (item.p !== undefined ? item.p : 0);
+
+      return {
+        ticker: key.toUpperCase(), // Forzamos mayúsculas para homologar la presentación visual
+        price: Number(item.u || 0),
+        percentageChange: Number(change),
+      };
+    });
+}
+
+/**
+ * Servicio encargado de la comunicación asíncrona con la API de DataBursatil.
+ */
 export const marketService = {
   async getGlobalIndicators(token: string): Promise<IndexItem[]> {
     if (!token) {
@@ -27,23 +58,20 @@ export const marketService = {
 
       const data = await response.json();
 
-      // Validamos si la respuesta es el objeto Key-Value que muestra tu consola
+      // Validamos si la respuesta es el objeto Key-Value que devuelve la API
       if (data && typeof data === 'object' && !Array.isArray(data)) {
-        
-        // Transformamos dinámicamente el Objeto en un Arreglo iterable
         const mappedArray = Object.keys(data).map((key) => {
           const item = data[key];
           return {
-            ticker: key,        // 'CAC40', 'DAX', 'SP500', etc.
-            u: Number(item.u),  // Mapea el valor 'u' del objeto original
-            c: Number(item.c),  // Mapea el cambio porcentual 'c'
+            ticker: key,
+            u: Number(item.u),
+            c: Number(item.c),
           };
         });
 
-        return mappedArray; // Esto ya devuelve el Array esperado de tipo IndexItem[]
+        return mappedArray;
       }
 
-      // Fallback por si la estructura fuera un arreglo plano directo
       if (Array.isArray(data)) {
         return data as IndexItem[];
       }
@@ -55,46 +83,62 @@ export const marketService = {
     }
   },
 
-  async getTopIssuers(token: string): Promise<IssuerTopItem[]> {
-    if (!token) {
-      throw new Error('API token is required to fetch top issuers');
-    }
-
+  async getTopIssuers(token: string): Promise<MarketAssetItem[]> {
+    if (!token) throw new Error('API token is required');
+    
     try {
-      // Consumimos el endpoint con los parámetros idénticos a los de tu consulta funcional
       const response = await fetch(
-        `${BASE_URL}/top?token=${token}&variables=suben&bolsa=BMV&cantidad=20&mercado=local`
+        `${BASE_URL}/top?token=${token}&variables=suben,bajan&bolsa=BMV&cantidad=5&mercado=local`
       );
-
-      if (!response.ok) {
-        throw new Error(`Error fetching top issuers: ${response.statusText}`);
-      }
-
+      if (!response.ok) throw new Error(`Error top issuers: ${response.statusText}`);
+      
       const data = await response.json();
-
       if (data && typeof data === 'object') {
-        /**
-         * Buscamos de forma dinámica el arreglo de emisoras.
-         * Esto previene fallos si la clave viene como 'SUBEN', 'suben', 'BAJAN', etc.
-         */
         const key = Object.keys(data).find(
           (k) => k.toLowerCase() === 'suben' || k.toLowerCase() === 'bajan' || Array.isArray(data[k])
         );
-
         const rawList = key ? data[key] : [];
-
         if (Array.isArray(rawList)) {
           return rawList.map((item: any) => ({
             ticker: String(item.e || 'UNKNOWN'),
-            percentageChange: Number(item.c || 0),
             price: Number(item.u || 0),
+            percentageChange: Number(item.c || 0),
           }));
         }
       }
-
       return [];
     } catch (error) {
       console.error('Failed to fetch top issuers:', error);
+      throw error;
+    }
+  },
+
+  async getForex(token: string): Promise<MarketAssetItem[]> {
+    if (!token) throw new Error('API token is required');
+    
+    try {
+      const response = await fetch(`${BASE_URL}/divisas?token=${token}`);
+      if (!response.ok) throw new Error(`Error forex: ${response.statusText}`);
+      
+      const data = await response.json();
+      return mapKeyValueResponse(data);
+    } catch (error) {
+      console.error('Failed to fetch forex:', error);
+      throw error;
+    }
+  },
+
+  async getCommodities(token: string): Promise<MarketAssetItem[]> {
+    if (!token) throw new Error('API token is required');
+    
+    try {
+      const response = await fetch(`${BASE_URL}/commodities?token=${token}`);
+      if (!response.ok) throw new Error(`Error commodities: ${response.statusText}`);
+      
+      const data = await response.json();
+      return mapKeyValueResponse(data);
+    } catch (error) {
+      console.error('Failed to fetch commodities:', error);
       throw error;
     }
   }

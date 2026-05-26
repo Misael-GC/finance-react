@@ -1,32 +1,39 @@
+// src/Components/MarketRankingList/MarketRankingList.tsx
 import { useState, useEffect } from 'react';
 import { useUI } from '../../Context/UIContext';
-import { marketService, type IssuerTopItem } from '../../Services/marketService';
+import { type MarketAssetItem } from '../../Services/marketService';
 import Card from '../Card/Card';
 
-export default function TopIssuers() {
+interface MarketRankingListProps {
+  title: string;
+  subtitle: string;
+  titleHref: string;
+  // Pasamos la función del servicio como una prop genérica que devuelve la misma estructura normalizada
+  fetchData: (token: string) => Promise<MarketAssetItem[]>;
+}
+
+export default function MarketRankingList({ title, subtitle, titleHref, fetchData }: MarketRankingListProps) {
   const { apiToken } = useUI();
-  const [topList, setTopList] = useState<IssuerTopItem[]>([]);
+  const [assets, setAssets] = useState<MarketAssetItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadTopData() {
+    async function loadData() {
       try {
         setLoading(true);
         setError(null);
 
-        if (!apiToken) {
-          console.warn("El token de la API aún no está disponible.");
-          return;
-        }
+        if (!apiToken) return;
 
-        const data = await marketService.getTopIssuers(apiToken);
+        // Invocamos la función del servicio inyectada por prop
+        const data = await fetchData(apiToken);
         
         if (isMounted) {
-          // Limitamos el render a los primeros 4 registros para mantener la UI compacta
-          setTopList(data.slice(0, 4));
+          // Limitamos uniformemente a 4 elementos para diseño consistente
+          setAssets(data.slice(0, 3));
         }
       } catch (err: any) {
         if (isMounted) {
@@ -40,7 +47,7 @@ export default function TopIssuers() {
     }
 
     if (apiToken) {
-      loadTopData();
+      loadData();
     } else {
       setLoading(false);
     }
@@ -48,32 +55,33 @@ export default function TopIssuers() {
     return () => {
       isMounted = false;
     };
-  }, [apiToken]);
+  }, [apiToken, fetchData]); // Añadimos fetchData a las dependencias por seguridad transaccional
 
   return (
-    <Card title="Top de Emisoras" subtitle="Mercado Local/Global" titleHref="/emisoras">
+    <Card title={title} subtitle={subtitle} titleHref={titleHref}>
       {loading ? (
-        <p className="text-slate-400 text-xs mt-2 animate-pulse">Cargando ranking...</p>
+        <p className="text-slate-400 text-xs mt-2 animate-pulse">Cargando datos...</p>
       ) : error ? (
         <p className="text-rose-400 text-xs mt-2">{error}</p>
-      ) : topList.length === 0 ? (
+      ) : assets.length === 0 ? (
         <p className="text-slate-500 text-xs mt-2">Sin variaciones registradas</p>
       ) : (
         <ul className="space-y-3 mt-2">
-          {topList.map((item, index) => {
+          {assets.map((item, index) => {
             const isPositive = item.percentageChange >= 0;
-            const price = item.price ? `$${item.price.toFixed(2)}` : 'N/A';
+            const priceFormatted = item.price ? `$${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : 'N/A';
+            
             return (
               <li 
                 key={`${item.ticker}-${index}`} 
                 className="flex justify-between border-b border-slate-700 pb-2 last:border-none last:pb-0"
               >
                 <span className="text-white font-medium text-sm">{item.ticker}</span>
-                <span className={`text-white font-medium text-sm`}> 
-                    {price ? '$' : ''}{item.price}
+                <span className="text-white font-medium text-sm"> 
+                  {priceFormatted}
                 </span>
                 <span className={`text-sm font-bold ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
-                  {isPositive ? '+' : ''}{item.percentageChange}%
+                  {isPositive ? '+' : ''}{item.percentageChange.toFixed(2)}%
                 </span>
               </li>
             );

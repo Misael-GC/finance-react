@@ -1,7 +1,8 @@
 
 import Card from '../../Components/Card/Card';
 import GlobalIndicators from '../../Components/GlobalIndicators/GlobalIndicators';
-import TopIssuers from '../../Components/TopIssuers/TopIssuers';
+import MarketRankingList from '../../Components/MarketRankingList/MarketRankingList';
+import { marketService } from '../../Services/marketService';
 
 export default function Home() {
 
@@ -16,33 +17,29 @@ export default function Home() {
         
         {/* COLUMNA IZQUIERDA: Panel de Mercado y Rankings (Ocupa 1/4) */}
         <div className="flex flex-col space-y-2 lg:col-span-1">
-          <TopIssuers />
+          {/* Tarjeta 1: Acciones/Emisoras */}
+        <MarketRankingList 
+          title="Top de Emisoras"
+          subtitle="Mercado Local/Global"
+          titleHref="/emisoras"
+          fetchData={marketService.getTopIssuers}
+        />
 
-          <Card title="Monitor de Divisas" subtitle="Tipos de Cambio">
-            <ul className="space-y-3 mt-2">
-              <li className="flex justify-between">
-                <span className="text-white">USD/MXN</span>
-                <span className="text-emerald-400">17.10 (+0.1%)</span>
-              </li>
-              <li className="flex justify-between">
-                <span className="text-white">EUR/MXN</span>
-                <span className="text-emerald-400">18.50 (+0.2%)</span>
-              </li>
-            </ul>
-          </Card>
+        {/* Tarjeta 2: Divisas / Forex */}
+        <MarketRankingList 
+          title="Mercado de Divisas"
+          subtitle="Forex Real-Time"
+          titleHref="/forex"
+          fetchData={marketService.getForex}
+        />
 
-          <Card title="Commodities">
-            <ul className="space-y-3 mt-2">
-              <li className="flex justify-between">
-                <span className="text-white">Petróleo WTI</span>
-                <span className="text-emerald-400">$85.10</span>
-              </li>
-              <li className="flex justify-between">
-                <span className="text-white">Oro</span>
-                <span className="text-rose-400">$1,350.00</span>
-              </li>
-            </ul>
-          </Card>
+        {/* Tarjeta 3: Materias Primas / Commodities */}
+        <MarketRankingList 
+          title="Commodites"
+          subtitle="Energía y Metales"
+          titleHref="/commodities"
+          fetchData={marketService.getCommodities}
+        />
         </div>
 
         {/* COLUMNA CENTRAL: Gráficos y Análisis (Ocupa 2/4) */}
@@ -55,6 +52,8 @@ export default function Home() {
               </div>
             </Card>
           </div>
+
+
 
           <div className="min-h-[16rem] flex flex-col">
             <Card title="Series Históricas" subtitle="/v2/historicos">
