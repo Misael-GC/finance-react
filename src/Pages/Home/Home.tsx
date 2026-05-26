@@ -4,6 +4,7 @@ import GlobalIndicators from '../../Components/GlobalIndicators/GlobalIndicators
 import MarketRankingList from '../../Components/MarketRankingList/MarketRankingList';
 import IntradayChart from '../../Components/IntradayChart/IntradayChart';
 import { marketService } from '../../Services/marketService';
+import HistoricalChart from '../../Components/HistoricalChart/HistoricalChart';
 
 export default function Home() {
 
@@ -52,12 +53,8 @@ export default function Home() {
 
 
 
-          <div className="min-h-[16rem] flex flex-col">
-            <Card title="Series Históricas" subtitle="/v2/historicos">
-              <div className="flex items-center justify-center h-32 border border-dashed border-slate-600 rounded-lg mt-4">
-                <p className="text-slate-500">Gráfico de líneas a largo plazo</p>
-              </div>
-            </Card>
+          <div className="min-h-[18.6rem] flex flex-col">
+            <HistoricalChart />
           </div>
         </div>
 

@@ -18,11 +18,11 @@ export interface IntradayChartItem {
   price: number; // Precio de cierre mapeado
 }
 
-/**
- * Función helper de mapeo utilitario independiente.
- * Extraída fuera del objeto para respetar SRP (Responsabilidad Única) 
- * y evitar errores de contexto con 'this' en callbacks asíncronos.
- */
+export interface HistoricalChartItem {
+  date: string;  // Fecha formateada (ej: "03 Nov")
+  price: number; // Precio al cierre del día
+}
+
 function mapKeyValueResponse(data: any): MarketAssetItem[] {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return [];
@@ -201,6 +201,56 @@ export const marketService = {
       return [];
     } catch (error) {
       console.error(`Failed to fetch intraday data for ${ticker}:`, error);
+      throw error;
+    }
+  },
+
+  async getHistoricalData(token: string, ticker: string): Promise<HistoricalChartItem[]> {
+    if (!token) throw new Error('API token is required');
+
+    try {
+      // Calculamos dinámicamente un rango de fechas de los últimos 30 días
+      const todayObj = new Date();
+      const thirtyDaysAgoObj = new Date();
+      thirtyDaysAgoObj.setDate(todayObj.getDate() - 30);
+
+      const finalDate = todayObj.toISOString().split('T')[0];
+      const startDate = thirtyDaysAgoObj.toISOString().split('T')[0];
+
+      const targetTicker = encodeURIComponent(ticker);
+
+      const response = await fetch(
+        `${BASE_URL}/historicos?token=${token}&inicio=${startDate}&final=${finalDate}&emisora_serie=${targetTicker}`
+      );
+
+      if (!response.ok) throw new Error(`Error historical fetch: ${response.statusText}`);
+
+      const data = await response.json();
+      console.log("JSON crudo recibido de la API de históricos:", data);
+
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        // Recorremos las llaves del objeto (que representan las fechas)
+        const mappedData = Object.keys(data).map((dateStr) => {
+          const values = data[dateStr]; // Devuelve [precio, volumen]
+          
+          // Formateamos sutilmente la fecha de "2025-11-03" a "03 Nov" para que luzca limpio en el eje X
+          const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+          const parts = dateStr.split('-');
+          const label = parts.length === 3 ? `${parts[2]} ${months[parseInt(parts[1]) - 1]}` : dateStr;
+
+          return {
+            date: label,
+            price: Array.isArray(values) ? Number(values[0] || 0) : 0
+          };
+        });
+
+        // Ordenamos cronológicamente de pasado a presente
+        return mappedData;
+      }
+
+      return [];
+    } catch (error) {
+      console.error(`Failed to fetch historical data for ${ticker}:`, error);
       throw error;
     }
   }
