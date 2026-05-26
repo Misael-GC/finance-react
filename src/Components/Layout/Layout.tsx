@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useUI } from "../../Context/UIContext";
 import Navbar from "../Navbar/Navbar";

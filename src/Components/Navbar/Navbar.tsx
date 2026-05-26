@@ -1,9 +1,5 @@
 import { useUI } from '../../Context/UIContext';
 
-interface NavbarProps {
-  onToggleMenu: () => void;
-}
-
 export default function Navbar() {
   const { toggleMenu } = useUI();
   return (
