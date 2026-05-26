@@ -19,12 +19,12 @@ export default function Layout() {
         />
         )}
       {/* Menú Lateral */}
-      <SideMenu isOpen={isMenuOpen} onClose={() => toggleMenu()} />
+      <SideMenu />
 
       {/* Área Principal */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Barra Superior */}
-        <Navbar onToggleMenu={toggleMenu}/>
+        <Navbar/>
 
         {/* Contenido Dinámico de la Página (Ej. Home) */}
         <main className="flex-1 overflow-y-auto flex flex-col">
