@@ -20,14 +20,14 @@ export default function IntradayChart() {
         setLoading(true);
         setError(null);
         const data = await marketService.getIntradayData(apiToken, 'WALMEX*');
-        // console.log('Datos intradía asignados al estado:', data);
+        console.log('Datos intradía asignados al estado:', data);
         
         if (isMounted) {
           setChartData(data);
         }
       } catch (err: any) {
         if (isMounted) {
-          setError('No se pudieron cargar los gráficos intradía.');
+          setError('No se pudieron cargar los gráficos intradía. ' + (err.message || 'Error desconocido'));
         }
       } finally {
         if (isMounted) {

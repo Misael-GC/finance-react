@@ -3,9 +3,10 @@ import Card from '../../Components/Card/Card';
 import GlobalIndicators from '../../Components/GlobalIndicators/GlobalIndicators';
 import MarketRankingList from '../../Components/MarketRankingList/MarketRankingList';
 import IntradayChart from '../../Components/IntradayChart/IntradayChart';
-import { marketService } from '../../Services/marketService';
 import HistoricalChart from '../../Components/HistoricalChart/HistoricalChart';
 import CompanyProfile from '../../Components/CompanyProfile/CompanyProfile';
+import MarketTrades from '../../Components/MarketTrades/MarketTrades';
+import { marketService } from '../../Services/marketService';
 
 export default function Home() {
 
@@ -71,13 +72,7 @@ export default function Home() {
             </div>
           </Card>
 
-          <Card title="Registro de Hechos" subtitle="/v2/hechos">
-             <div className="mt-2 text-xs">
-              <p className="text-white font-medium">WALMEX Serie A</p>
-              <p>Precio: $72.35 | Vol: 300</p>
-              <p className="text-slate-500">Hora: 10:30:45</p>
-             </div>
-          </Card>
+          <MarketTrades />
         </div>
 
       </div>
