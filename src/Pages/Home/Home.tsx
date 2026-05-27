@@ -50,7 +50,7 @@ export default function Home() {
         <div className="flex flex-col lg:col-span-2">
           {/* Al envolver el Card en un div, podemos forzar su altura mínima */}
           <div className="min-h-[20rem] flex flex-col h-full">
-            {/* <IntradayChart /> */}
+            <IntradayChart />
           </div>
 
 

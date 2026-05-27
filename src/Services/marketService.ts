@@ -171,7 +171,11 @@ export const marketService = {
     if (!token) throw new Error('API token is required');
     
     try {
-      const today = new Date().toISOString().split('T')[0];
+      // 1. Corregir el desfase de zona horaria (Evita que salte al día de mañana por la tarde/noche)
+      const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+      const localISOTime = (new Date(Date.now() - tzOffset)).toISOString();
+      const today = localISOTime.split('T')[0]; // "YYYY-MM-DD" local exacto
+
       const targetTicker = encodeURIComponent(ticker);
       
       const response = await fetch(
@@ -185,7 +189,7 @@ export const marketService = {
       // Buscamos dinámicamente el contenido del ticker (ya sea data["WALMEX*"] o el primer objeto que venga)
       const rawContent = data[ticker] || Object.values(data)[0];
 
-      // Verificamos si es un objeto Key-Value de marcas de tiempo (como lo muestra tu consola)
+      // Verificamos si es un objeto Key-Value de marcas de tiempo
       if (rawContent && typeof rawContent === 'object' && !Array.isArray(rawContent)) {
         
         // Transformamos el objeto de marcas de tiempo en un Arreglo ordenado
