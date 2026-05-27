@@ -33,6 +33,15 @@ export interface CompanyProfileItem {
   sharesInCirculation?: number; // Acciones en circulación
 }
 
+export interface TradeItem {
+  id: string;   // ID del hecho o combinación única
+  time: string; // Hora en formato HH:MM:SS (mapeado de 'h')
+  price: number; // Último hecho (mapeado de 'u')
+  volume: number; // Volumen (mapeado de 'v')
+  buyer: string;  // Casa compra (mapeado de 'cc')
+  seller: string; // Casa vende (mapeado de 'cv')
+}
+
 function mapKeyValueResponse(data: any): MarketAssetItem[] {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {
     return [];
@@ -310,5 +319,58 @@ export const marketService = {
       console.error(`Failed to fetch company profile for ${ticker}:`, error);
       throw error;
     }
+  },
+
+  async getMarketTrades(token: string, emisoraSerie: string): Promise<TradeItem[]> {
+  if (!token) throw new Error('API token is required');
+
+  try {
+    // 1. Obtener la fecha local correcta (Evita el desfase de ISOString/UTC)
+    const tzOffset = (new Date()).getTimezoneOffset() * 60000; // offset en ms
+    const localISOTime = (new Date(Date.now() - tzOffset)).toISOString();
+    const fechaLocal = localISOTime.split('T')[0]; // "YYYY-MM-DD"
+
+    // 2. Obtener la hora actual para el tope final del filtro (Formato HH:MM)
+    const ahora = new Date();
+    const horaActual = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+
+    // 3. Definir hora de inicio (ej: 08:00 que abre el mercado para capturar todo el día)
+    const horaInicio = '08:00'; 
+
+    const targetTicker = encodeURIComponent(emisoraSerie);
+    
+    // Construimos la URL con fecha real local y rango dinámico de tiempo
+    const url = `${BASE_URL}/hechos?token=${token}&emisora_serie=${targetTicker}&fecha=${fechaLocal}&horai=${horaInicio}&horaf=${horaActual}`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Error fetching trades: ${response.statusText}`);
+
+    const data = await response.json();
+
+    if (data && typeof data === 'object') {
+      const rawTrades = data[emisoraSerie] || Object.values(data)[0] || data;
+
+      if (Array.isArray(rawTrades)) {
+        const mappedTrades = rawTrades.map((item: any, idx: number) => ({
+          id: item.id || `trade-${idx}-${item.h}`,
+          time: String(item.h || '00:00:00'),
+          price: Number(item.u || 0),
+          volume: Number(item.v || 0),
+          buyer: String(item.cc || '-'),
+          seller: String(item.cv || '-')
+        }));
+
+        // 4. IMPORTANTE: Ordenar al revés (más recientes primero) 
+        // para que tu .slice(0, 5) en el componente muestre las ÚLTIMAS operaciones del mercado.
+        return mappedTrades.sort((a, b) => b.time.localeCompare(a.time));
+      }
+    }
+
+    return [];
+  } catch (error) {
+    console.error(`Failed to fetch trades for ${emisoraSerie}:`, error);
+    throw error;
   }
+}
+
 };
