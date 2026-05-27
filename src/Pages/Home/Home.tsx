@@ -49,13 +49,12 @@ export default function Home() {
         {/* COLUMNA CENTRAL: Gráficos y Análisis (Ocupa 2/4) */}
         <div className="flex flex-col lg:col-span-2">
           {/* Al envolver el Card en un div, podemos forzar su altura mínima */}
-          <div className="min-h-[20rem] flex flex-col h-full">
+          <div className="min-h-[20rem] flex flex-col ">
             <IntradayChart />
           </div>
 
 
-
-          <div className="min-h-[18.6rem] flex flex-col">
+          <div className=" flex flex-col h-full mt-2">
             <HistoricalChart />
           </div>
         </div>
@@ -63,16 +62,15 @@ export default function Home() {
         {/* COLUMNA DERECHA: Detalle de Emisora y Datos (Ocupa 1/4) */}
         <div className="flex flex-col space-y-2 lg:col-span-1">
           <CompanyProfile />
-
-          <Card title="Análisis Fundamental" subtitle="/v2/financieros">
+          <MarketTrades />
+          
+          {/* <Card title="Análisis Fundamental" subtitle="/v2/financieros">
             <div className="mt-2 text-xs space-y-2 text-cyan-400 cursor-pointer">
               <p className="hover:text-cyan-300">Estados de Situación Financiera →</p>
               <p className="hover:text-cyan-300">Flujos de Efectivo →</p>
               <p className="hover:text-cyan-300">Resultados Trimestrales →</p>
             </div>
-          </Card>
-
-          <MarketTrades />   
+          </Card> */}
         </div>
 
       </div>
