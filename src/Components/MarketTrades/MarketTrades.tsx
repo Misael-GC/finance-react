@@ -19,7 +19,7 @@ export default function MarketTrades() {
         setLoading(true);
         setError(null);
         const data = await marketService.getMarketTrades(apiToken, 'WALMEX*');
-        console.log('Datos de Hechos recibidos:', data);
+        // console.log('Datos de Hechos recibidos:', data);
         if (isMounted) {
           // Tomamos los primeros 5 hechos para mantener el Widget estilizado en la barra lateral
           setTrades(data.slice(0, 5));
