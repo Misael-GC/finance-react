@@ -8,7 +8,6 @@ interface MarketRankingListProps {
   title: string;
   subtitle: string;
   titleHref: string;
-  // Pasamos la función del servicio como una prop genérica que devuelve la misma estructura normalizada
   fetchData: (token: string) => Promise<MarketAssetItem[]>;
 }
 
@@ -28,11 +27,10 @@ export default function MarketRankingList({ title, subtitle, titleHref, fetchDat
 
         if (!apiToken) return;
 
-        // Invocamos la función del servicio inyectada por prop
         const data = await fetchData(apiToken);
         
         if (isMounted) {
-          // Limitamos uniformemente a 4 elementos para diseño consistente
+          // Limitamos uniformemente a 3 elementos para diseño consistente
           setAssets(data.slice(0, 3));
         }
       } catch (err: any) {
@@ -55,21 +53,43 @@ export default function MarketRankingList({ title, subtitle, titleHref, fetchDat
     return () => {
       isMounted = false;
     };
-  }, [apiToken, fetchData]); // Añadimos fetchData a las dependencias por seguridad transaccional
+  }, [apiToken, fetchData]);
 
   return (
     <Card title={title} subtitle={subtitle} titleHref={titleHref}>
       {loading ? (
-        <p className="text-slate-400 text-xs mt-2 animate-pulse">Cargando datos...</p>
+        /* ================= SKELETON LOADER (NATIVO TAILWIND) ================= */
+        <ul className="space-y-3 mt-2 animate-pulse">
+          {[...Array(3)].map((_, index) => (
+            <li 
+              key={`skeleton-${index}`} 
+              className="flex justify-between items-center border-b border-slate-700 pb-2 last:border-none last:pb-0"
+            >
+              {/* Contenedor del Ticker ficticio */}
+              <div className="h-4 bg-slate-700 rounded w-16" />
+              {/* Contenedor del Precio ficticio */}
+              <div className="h-4 bg-slate-700 rounded w-20" />
+              {/* Contenedor del Porcentaje ficticio */}
+              <div className="h-4 bg-slate-700 rounded w-12" />
+            </li>
+          ))}
+        </ul>
       ) : error ? (
-        <p className="text-rose-400 text-xs mt-2">{error}</p>
+        /* ====== ESTADO DE ERROR ESTILIZADO CON UN CUERPO SUTIL ====== */
+        <div className="mt-2 p-2.5 bg-rose-500/10 border border-rose-500/20 rounded-md flex items-center space-x-2">
+          <span className="text-rose-400 text-xs font-medium">⚠️ {error}</span>
+        </div>
       ) : assets.length === 0 ? (
-        <p className="text-slate-500 text-xs mt-2">Sin variaciones registradas</p>
+        /* ====== ESTADO DE DATOS VACÍOS ====== */
+        <p className="text-slate-500 text-xs mt-2 italic">Sin variaciones registradas</p>
       ) : (
+        /* ====== RENDERIZADO DE DATOS REALES ====== */
         <ul className="space-y-3 mt-2">
           {assets.map((item, index) => {
             const isPositive = item.percentageChange >= 0;
-            const priceFormatted = item.price ? `$${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : 'N/A';
+            const priceFormatted = item.price 
+              ? `$${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` 
+              : 'N/A';
             
             return (
               <li 

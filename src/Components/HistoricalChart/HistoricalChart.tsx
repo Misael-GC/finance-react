@@ -1,67 +1,66 @@
-import { useState, useEffect } from 'react';
+// src/Components/HistoricalChart/HistoricalChart.tsx
 import { useUI } from '../../Context/UIContext';
-import { marketService, type HistoricalChartItem } from '../../Services/marketService';
+import { marketService } from '../../Services/marketService';
+import { useAsyncData } from '../../Hooks/useAsyncData';
 import Card from '../Card/Card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export default function HistoricalChart() {
   const { apiToken } = useUI();
-  const [chartData, setChartData] = useState<HistoricalChartItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadHistorical() {
-      if (!apiToken) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        // Traemos el histórico de WALMEX*
-        const data = await marketService.getHistoricalData(apiToken, 'WALMEX*');
-        
-        if (isMounted) {
-          setChartData(data);
-        }
-      } catch (err: any) {
-        if (isMounted) {
-          setError('No se pudieron cargar las series históricas.');
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadHistorical();
-
-    return () => {
-      isMounted = false;
-    };
+  // Abstraemos por completo la consulta asíncrona mediante nuestro Hook Genérico
+  const { data: chartData, loading, error } = useAsyncData(async () => {
+    if (!apiToken) return [];
+    return await marketService.getHistoricalData(apiToken, 'WALMEX*');
   }, [apiToken]);
 
   return (
     <Card title="Series Históricas" subtitle="WALMEX* /v2/historicos" titleHref="/historicos">
       <div className="w-full h-[160px] min-w-0 mt-4 relative block">
+        
+        {/* ================= CONTROL DE ESTADOS DE LA INTERFAZ ================= */}
         {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-slate-400 text-xs animate-pulse">Cargando series a largo plazo...</p>
+          /* 1. SKELETON LOADER EN FORMA DE GRÁFICA (Mismos colores de barra) */
+          <div className="absolute inset-0 flex flex-col justify-between animate-pulse pb-2">
+            {/* Simulación del área interna de la gráfica con líneas horizontales */}
+            <div className="w-full h-[120px] flex flex-col justify-between pl-8 pr-2">
+              <div className="h-[1px] bg-slate-800 w-full" />
+              {/* Barra simulando una tendencia en carga */}
+              <div className="h-6 bg-slate-700/40 rounded-full w-2/3 ml-12 rotate-[2deg] blur-[1px]" />
+              <div className="h-[1px] bg-slate-800 w-full" />
+              <div className="h-[1px] bg-slate-800 w-full" />
+            </div>
+            
+            {/* Simulación de las etiquetas de los ejes X e Y */}
+            <div className="flex justify-between items-center text-[9px] px-1 text-transparent select-none mt-1">
+              <div className="w-10 h-2 bg-slate-700 rounded" />
+              <div className="w-14 h-2 bg-slate-700 rounded" />
+              <div className="w-14 h-2 bg-slate-700 rounded" />
+              <div className="w-12 h-2 bg-slate-700 rounded" />
+            </div>
           </div>
         ) : error ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-rose-400 text-xs">⚠️ {error}</p>
+          /* 2. ESTADO DE ERROR FINANCIERO ESTILIZADO */
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-lg flex items-center space-x-2 max-w-[320px] shadow-sm">
+              <span className="text-rose-400 text-sm">⚠️</span>
+              <p className="text-rose-400 text-xs font-medium truncate" title={error}>
+                {error}
+              </p>
+            </div>
           </div>
-        ) : chartData.length === 0 ? (
+        ) : !chartData || chartData.length === 0 ? (
+          /* 3. ESTADO VACÍO REGISTRO INACTIVO */
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-slate-500 text-xs">Sin registros de cotización históricos.</p>
+            <div className="p-4 bg-slate-900/40 border border-slate-800/60 rounded-lg text-center">
+              <span className="text-slate-500 text-sm block mb-1" role="img" aria-label="empty">📉</span>
+              <p className="text-slate-500 text-xs italic">Sin registros de cotización históricos.</p>
+            </div>
           </div>
         ) : (
+          /* 4. FLUJO PRINCIPAL EXITOSO CON RENDIMIENTO ÓPTIMO */
           <ResponsiveContainer width="100%" height={160}>
             <LineChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              {/* Agregamos una cuadrícula muy sutil estilo terminal de trading */}
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
               <XAxis 
                 dataKey="date" 
@@ -84,7 +83,7 @@ export default function HistoricalChart() {
               <Line 
                 type="monotone" 
                 dataKey="price" 
-                stroke="#22d3ee" // cyan-400 para diferenciarlo visualmente del intradía
+                stroke="#22d3ee" 
                 strokeWidth={2}
                 dot={false}
                 activeDot={{ r: 4 }}
@@ -92,6 +91,7 @@ export default function HistoricalChart() {
             </LineChart>
           </ResponsiveContainer>
         )}
+
       </div>
     </Card>
   );
