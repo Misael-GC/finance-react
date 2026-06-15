@@ -6,11 +6,11 @@ export default function Navbar() {
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 z-10">
       <div className="flex items-center space-x-3 w-full md:w-1/3">
         {/* Botón para abrir el menú lateral en móviles */}
-        <input 
+        {/* <input 
           type="text" 
           placeholder="Buscar emisora (ej. AMXZACTO)..." 
           className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        /> */}
       </div>
       <div className="flex items-center space-x-4">
         <button 
