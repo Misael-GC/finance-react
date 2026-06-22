@@ -54,6 +54,9 @@ export default function SideMenu() {
           </svg>
           <span>Subir Documentos</span>
         </NavLink>
+        <NavLink to="/herramientas" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">
+        🛠️ Herramientas
+      </NavLink>
       </nav>
     </aside>
   );

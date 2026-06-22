@@ -6,6 +6,7 @@ import MyAccount from '../MyAccount/MyAccount';
 import NotFound from '../NotFound/NotFound';
 import SigIn from '../SigIn/SigIn';
 import { DocumentosPage } from '../Documentos/Documentos';
+import { HerramientasFinancieras } from '../Herramientas/HerramientasFinancieras';
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -18,6 +19,7 @@ const AppRoutes = () => {
         { path: '/sig-in', element: <SigIn /> },
         { path: '/documentos', element: <DocumentosPage /> },
         { path: '*', element: <NotFound /> },
+        { path: '/herramientas', element: <HerramientasFinancieras /> },
       ]
     }
   ]);
