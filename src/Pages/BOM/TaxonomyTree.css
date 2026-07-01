@@ -1,0 +1,145 @@
+/* src/Components/TaxonomyTree/TaxonomyTree.css */
+
+.taxonomy-tree-main-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 1rem;
+  overflow-x: auto;
+  gap: 0; /* El gap se maneja con márgenes y conectores */
+  min-height: 400px;
+}
+
+.tree-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.node-branch-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+}
+
+/* Tarjeta / Nodo */
+.taxonomy-node-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  background-color: rgba(30, 41, 59, 0.7); /* slate-800 con opacidad */
+  border: 1px solid #334155; /* slate-700 */
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.taxonomy-node-wrapper.node-active {
+  background-color: rgba(15, 23, 42, 0.9); /* slate-900 más oscuro */
+  border-color: #3B82F6; /* blue-500 */
+  box-shadow: 0 0 0 1px #3B82F6;
+}
+
+/* Etiquetas (1. TRACTOS...) */
+.level-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Contenedor del Select y Botón */
+.node-control-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Select Simulado */
+.select-mimic {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: transparent;
+  border: 1px solid #475569; /* slate-600 */
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #F1F5F9;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.select-mimic:hover {
+  border-color: #94A3B8;
+}
+
+.icon-search, .icon-arrow {
+  font-size: 0.8rem;
+  color: #94A3B8;
+}
+
+.select-label-text {
+  flex: 1;
+  margin: 0 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botones de Añadir (+) */
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.add-button:hover {
+  transform: scale(1.05);
+}
+
+.add-button:active {
+  transform: scale(0.95);
+}
+
+.green-add {
+  background-color: #22C55E; /* green-500 */
+  color: white;
+}
+
+.white-add {
+  background-color: #F8FAFC;
+  color: #0F172A;
+}
+
+/* Líneas Conectoras */
+.tree-connector {
+  width: 40px;
+  height: 2px;
+  background-color: #3B82F6; /* Color azul de la línea */
+  margin: 0 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ajuste fino para líneas internas */
+.tree-connector.nested {
+  margin-left: 0.5rem;
+  margin-right: -0.5rem;
+}

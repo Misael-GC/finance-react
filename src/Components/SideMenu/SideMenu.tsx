@@ -57,7 +57,11 @@ export default function SideMenu() {
         <NavLink to="/herramientas" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">
         🛠️ Herramientas
       </NavLink>
-      </nav>
-    </aside>
+      
+      <NavLink to="/bom" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">
+        🌳 BOM
+      </NavLink>
+    </nav>
+  </aside>
   );
 }

@@ -7,6 +7,7 @@ import NotFound from '../NotFound/NotFound';
 import SigIn from '../SigIn/SigIn';
 import { DocumentosPage } from '../Documentos/Documentos';
 import { HerramientasFinancieras } from '../Herramientas/HerramientasFinancieras';
+import BOM  from '../BOM/BOM';
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         { path: '/documentos', element: <DocumentosPage /> },
         { path: '*', element: <NotFound /> },
         { path: '/herramientas', element: <HerramientasFinancieras /> },
+        { path: '/bom', element: <BOM /> },
       ]
     }
   ]);
