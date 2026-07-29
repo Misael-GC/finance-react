@@ -17,7 +17,7 @@ export default function Home() {
       <GlobalIndicators />
 
       {/* 2. CONTENIDO PRINCIPAL: Grid de 4 columnas (Proporción 1 - 2 - 1) */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-1">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         
         {/* COLUMNA IZQUIERDA: Panel de Mercado y Rankings (Ocupa 1/4) */}
         <div className="flex flex-col space-y-2 lg:col-span-1">
@@ -76,7 +76,7 @@ export default function Home() {
       </div>
 
       {/* 3. SECCIÓN INFERIOR: Feed de Noticias y Alertas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-1 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         <Card title="Titulares de Negocios" subtitle="/v2/noticias">
           <ul className="space-y-3 mt-2 text-sm">
             <li><strong className="text-cyan-400">El Economista:</strong> Banxico mantiene tasa de interés...</li>

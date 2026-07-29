@@ -7,7 +7,7 @@ export default function SideMenu() {
   return (
     <aside className={`
       /* Capa base: Estructura, contención y transición fluida */
-      bg-slate-900 text-white flex flex-col z-50
+      bg-white dark:bg-[#131823] border-r border-slate-200 dark:border-slate-800 text-slate-800 dark:text-white flex flex-col z-50
       transition-all duration-300 ease-in-out overflow-hidden whitespace-nowrap
       
       /* Comportamiento Móvil: Fijo y superpuesto (Overlay) */
@@ -18,13 +18,13 @@ export default function SideMenu() {
       md:relative md:translate-x-0
       ${isMenuOpen ? 'md:w-64' : 'md:w-0 md:border-none'}
     `}>
-      <div className="h-16 flex items-center justify-between px-6 border-b border-slate-700 min-w-[16rem]">
-        <h1 className="text-xl font-bold">MarketTrack</h1>
+      <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800 min-w-[16rem]">
+        <h1 className="text-xl font-bold text-slate-900 dark:text-white">MarketTrack</h1>
         
         {/* Botón de cerrar interno: Sigue siendo solo visible en móvil */}
         <button 
           onClick={closeMenu}
-          className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white md:hidden focus:outline-none"
+          className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white md:hidden focus:outline-none"
           aria-label="Cerrar menú"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,9 +34,9 @@ export default function SideMenu() {
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2 min-w-[16rem]">
-        <NavLink to="/" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">🏠 Dashboard Principal</NavLink>
-        <NavLink to="/my-account" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">📈 Mercado Local</NavLink>
-        <NavLink to="/sig-in" onClick={closeMenu} className="block px-4 py-2 rounded hover:bg-slate-800">🌎 Entorno Macro</NavLink>
+        <NavLink to="/" onClick={closeMenu} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">🏠 Dashboard Principal</NavLink>
+        <NavLink to="/my-account" onClick={closeMenu} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">📈 Mercado Local</NavLink>
+        <NavLink to="/sig-in" onClick={closeMenu} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">🌎 Entorno Macro</NavLink>
       </nav>
     </aside>
   );

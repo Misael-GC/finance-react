@@ -10,7 +10,7 @@ export default function Layout() {
 
   const { isMenuOpen, toggleMenu } = useUI();
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-slate-100 overflow-hidden"> 
+    <div className="flex flex-col md:flex-row h-screen bg-transparent overflow-hidden"> 
       {
         isMenuOpen && (
           <div 

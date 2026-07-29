@@ -59,11 +59,11 @@ export default function MarketRankingList({ title, subtitle, titleHref, fetchDat
     <Card title={title} subtitle={subtitle} titleHref={titleHref}>
       {loading ? (
         /* ================= SKELETON LOADER (NATIVO TAILWIND) ================= */
-        <ul className="space-y-3 mt-2 animate-pulse">
+        <ul className="space-y-1 mt-2 animate-pulse">
           {[...Array(3)].map((_, index) => (
             <li 
               key={`skeleton-${index}`} 
-              className="flex justify-between items-center border-b border-slate-700 pb-2 last:border-none last:pb-0"
+              className="flex justify-between items-center p-2 rounded-lg bg-slate-100 dark:bg-slate-800/30"
             >
               {/* Contenedor del Ticker ficticio */}
               <div className="h-4 bg-slate-700 rounded w-16" />
@@ -76,7 +76,7 @@ export default function MarketRankingList({ title, subtitle, titleHref, fetchDat
         </ul>
       ) : error ? (
         /* ====== ESTADO DE ERROR ESTILIZADO CON UN CUERPO SUTIL ====== */
-        <div className="mt-2 p-2.5 bg-rose-500/10 border border-rose-500/20 rounded-md flex items-center space-x-2">
+        <div className="mt-2 p-3 bg-rose-500/10 border border-rose-500/20 rounded-lg flex items-center space-x-2 backdrop-blur-sm">
           <span className="text-rose-400 text-xs font-medium">⚠️ {error}</span>
         </div>
       ) : assets.length === 0 ? (
@@ -84,7 +84,7 @@ export default function MarketRankingList({ title, subtitle, titleHref, fetchDat
         <p className="text-slate-500 text-xs mt-2 italic">Sin variaciones registradas</p>
       ) : (
         /* ====== RENDERIZADO DE DATOS REALES ====== */
-        <ul className="space-y-3 mt-2">
+        <ul className="space-y-1 mt-2">
           {assets.map((item, index) => {
             const isPositive = item.percentageChange >= 0;
             const priceFormatted = item.price 
@@ -94,13 +94,13 @@ export default function MarketRankingList({ title, subtitle, titleHref, fetchDat
             return (
               <li 
                 key={`${item.ticker}-${index}`} 
-                className="flex justify-between border-b border-slate-700 pb-2 last:border-none last:pb-0"
+                className="flex justify-between items-center p-2 rounded-lg transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/50 group/item"
               >
-                <span className="text-white font-medium text-sm">{item.ticker}</span>
-                <span className="text-white font-medium text-sm"> 
+                <span className="text-slate-800 dark:text-white font-medium text-sm group-hover/item:text-cyan-700 dark:group-hover/item:text-cyan-300 transition-colors">{item.ticker}</span>
+                <span className="text-slate-600 dark:text-slate-300 font-mono text-sm group-hover/item:text-slate-900 dark:group-hover/item:text-white transition-colors"> 
                   {priceFormatted}
                 </span>
-                <span className={`text-sm font-bold ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
+                <span className={`text-sm font-mono font-bold ${isPositive ? 'text-emerald-600 dark:text-emerald-500' : 'text-rose-600 dark:text-rose-500'}`}>
                   {isPositive ? '+' : ''}{item.percentageChange.toFixed(2)}%
                 </span>
               </li>

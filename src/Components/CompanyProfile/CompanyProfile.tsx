@@ -51,22 +51,22 @@ export default function CompanyProfile() {
         /* ====== RENDERIZADO DE DATOS REALES ====== */
         <div className="mt-2 text-xs space-y-2.5">
           <p>
-            <strong className="text-white block mb-0.5">Emisora:</strong> 
-            <span className="text-cyan-400 font-mono font-bold bg-slate-900/50 px-1.5 py-0.5 rounded border border-slate-700/40">
+            <strong className="text-slate-800 dark:text-white block mb-0.5">Emisora:</strong> 
+            <span className="text-cyan-700 dark:text-cyan-400 font-mono font-bold bg-slate-100 dark:bg-slate-900/50 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700/40">
               {profile.ticker}
             </span>
           </p>
           <p>
-            <strong className="text-white block mb-0.5">Razón Social:</strong> 
-            <span className="text-slate-300 leading-relaxed block">{profile.corporateName}</span>
+            <strong className="text-slate-800 dark:text-white block mb-0.5">Razón Social:</strong> 
+            <span className="text-slate-600 dark:text-slate-300 leading-relaxed block">{profile.corporateName}</span>
           </p>
           <p>
-            <strong className="text-white block mb-0.5">Clasificación / Instrumento:</strong> 
-            <span className="text-slate-400 block">{profile.marketSector}</span>
+            <strong className="text-slate-800 dark:text-white block mb-0.5">Clasificación / Instrumento:</strong> 
+            <span className="text-slate-500 dark:text-slate-400 block">{profile.marketSector}</span>
           </p>
           <p>
-            <strong className="text-white block mb-0.5">Código ISIN:</strong> 
-            <span className="text-slate-500 font-mono block">{profile.isin}</span>
+            <strong className="text-slate-800 dark:text-white block mb-0.5">Código ISIN:</strong> 
+            <span className="text-slate-400 dark:text-slate-500 font-mono block">{profile.isin}</span>
           </p>
         </div>
       )}

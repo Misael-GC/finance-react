@@ -12,7 +12,7 @@ export default function Footer() {
     }`;
 
   return (
-    <footer className="w-full bg-slate-900 border-t border-slate-800 text-slate-400">
+    <footer className="w-full bg-white dark:bg-[#131823] border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
       <div className="max-w-6xl mx-auto px-6 py-12">
         
         {/* Grid Principal - Diseño Responsivo */}
@@ -21,8 +21,8 @@ export default function Footer() {
           {/* Columna 1: Branding / Identidad */}
           <div className="md:col-span-1 space-y-4">
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-extrabold text-white tracking-tight">
-                Plataforma<span className="text-cyan-400">.</span>
+              <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Plataforma<span className="text-cyan-600 dark:text-cyan-400">.</span>
               </span>
             </div>
             <p className="text-sm text-slate-500 leading-relaxed">
@@ -32,7 +32,7 @@ export default function Footer() {
 
           {/* Columna 2: Navegación Principal */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
               Aplicación
             </h4>
             <ul className="space-y-1">
@@ -50,7 +50,7 @@ export default function Footer() {
 
           {/* Columna 3: Soporte / Recursos */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
               Recursos
             </h4>
             <ul className="space-y-1">
@@ -74,10 +74,10 @@ export default function Footer() {
 
           {/* Columna 4: Seguridad y Cumplimiento */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
               Seguridad
             </h4>
-            <div className="rounded-xl bg-slate-800/40 border border-slate-800 p-4 space-y-2">
+            <div className="rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 p-4 space-y-2">
               <div className="flex items-center space-x-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-xs font-mono text-emerald-400 font-bold">Modo Strict pnpm</span>
@@ -91,7 +91,7 @@ export default function Footer() {
         </div>
 
         {/* Separador Inferior */}
-        <div className="pt-8 border-t border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-8 border-t border-slate-200 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             &copy; {currentYear} Plataforma Segura. Todos los derechos reservados.
           </div>

@@ -58,10 +58,10 @@ export default function MarketTrades() {
             </div>
           ) : !trades || trades.length === 0 ? (
             /* 3. ESTADO VACÍO REGISTRO INACTIVO */
-            <div className="p-5 bg-slate-900/40 border border-slate-800/60 rounded-lg flex flex-col items-center justify-center text-center w-full">
+            <div className="p-5 bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/60 rounded-lg flex flex-col items-center justify-center text-center w-full">
               <span className="text-slate-500 text-sm mb-1" role="img" aria-label="empty">📋</span>
-              <h4 className="text-slate-400 text-xs font-medium">Registro Inactivo</h4>
-              <p className="text-slate-500 text-[11px] mt-0.5">
+              <h4 className="text-slate-500 dark:text-slate-400 text-xs font-medium">Registro Inactivo</h4>
+              <p className="text-slate-400 dark:text-slate-500 text-[11px] mt-0.5">
                 Sin operaciones ejecutadas hoy
               </p>
             </div>
@@ -71,13 +71,13 @@ export default function MarketTrades() {
               {trades.map((trade) => (
                 <div 
                   key={trade.id} 
-                  className="flex justify-between items-center text-xs text-slate-300 bg-slate-900/30 hover:bg-slate-700/30 px-1 py-1 rounded transition-colors duration-150"
+                  className="flex justify-between items-center text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900/30 hover:bg-slate-200 dark:hover:bg-slate-700/30 px-1 py-1 rounded transition-colors duration-150"
                 >
-                  <span className="w-1/4 font-mono text-slate-400 text-[11px]">{trade.time}</span>
-                  <span className="w-1/4 text-right font-medium text-white font-mono">${trade.price.toFixed(2)}</span>
-                  <span className="w-1/4 text-right font-mono text-cyan-400">{trade.volume}</span>
-                  <span className="w-1/4 text-right text-[10px] font-mono text-slate-400 tracking-tighter">
-                    {trade.buyer} <span className="text-slate-600">›</span> {trade.seller}
+                  <span className="w-1/4 font-mono text-slate-500 dark:text-slate-400 text-[11px]">{trade.time}</span>
+                  <span className="w-1/4 text-right font-medium text-slate-800 dark:text-white font-mono">${trade.price.toFixed(2)}</span>
+                  <span className="w-1/4 text-right font-mono text-cyan-600 dark:text-cyan-400">{trade.volume}</span>
+                  <span className="w-1/4 text-right text-[10px] font-mono text-slate-500 dark:text-slate-400 tracking-tighter">
+                    {trade.buyer} <span className="text-slate-400 dark:text-slate-600">›</span> {trade.seller}
                   </span>
                 </div>
               ))}

@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 dark:bg-[#0B0E14] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen selection:bg-cyan-500/30;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white dark:bg-[#131823] border border-slate-200 dark:border-slate-800 shadow-sm rounded-lg;
+  }
+  
+  .glass-panel-hover {
+    @apply transition-colors duration-200 hover:border-slate-300 dark:hover:border-slate-600;
+  }
+}

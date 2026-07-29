@@ -74,11 +74,12 @@ export default function GlobalIndicators() {
         {indices.map((ind, index) => (
           <div
             key={`orig-${ind.ticker}-${index}`}
-            className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
+            className="flex items-center space-x-3 glass-panel px-4 py-2 rounded-lg groups min-w-max"
           >
-            <span className="text-sm font-bold text-white">{ind.ticker}:</span>
-            <span className="text-sm text-slate-300">{ind.u}</span>
-            <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-500"></div>
+            <span className="text-sm font-bold text-slate-800 dark:text-white tracking-wide">{ind.ticker}:</span>
+            <span className="text-sm text-slate-600 dark:text-slate-300 font-mono">{ind.u}</span>
+            <span className={`text-xs font-mono font-bold ${ind.c > 0 ? 'text-emerald-600 dark:text-emerald-500' : 'text-rose-600 dark:text-rose-500'}`}>
               ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
             </span>
           </div>
@@ -88,11 +89,12 @@ export default function GlobalIndicators() {
         {indices.map((ind, index) => (
           <div
             key={`dup-${ind.ticker}-${index}`}
-            className="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-4 py-2 rounded-lg groups"
+            className="flex items-center space-x-3 glass-panel px-4 py-2 rounded-lg groups min-w-max"
           >
-            <span className="text-sm font-bold text-white">{ind.ticker}:</span>
-            <span className="text-sm text-slate-300">{ind.u}</span>
-            <span className={`text-xs font-bold ${ind.c > 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-600 dark:bg-cyan-500"></div>
+            <span className="text-sm font-bold text-slate-800 dark:text-white tracking-wide">{ind.ticker}:</span>
+            <span className="text-sm text-slate-600 dark:text-slate-300 font-mono">{ind.u}</span>
+            <span className={`text-xs font-mono font-bold ${ind.c > 0 ? 'text-emerald-600 dark:text-emerald-500' : 'text-rose-600 dark:text-rose-500'}`}>
               ({ind.c > 0 ? '+' : ''}{ind.c}%) {ind.c > 0 ? '▲' : '▼'}
             </span>
           </div>

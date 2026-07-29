@@ -81,9 +81,9 @@ export default function IntradayChart() {
                 domain={['auto', 'auto']}
               />
               <Tooltip
-                contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', borderRadius: '0.5rem' }}
-                labelStyle={{ color: '#94a3b8', fontSize: '11px', fontWeight: 'bold' }}
-                itemStyle={{ color: '#ffffff', fontSize: '12px' }}
+                contentStyle={{ backgroundColor: '#131823', borderColor: '#1e293b', borderRadius: '0.375rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                labelStyle={{ color: '#94a3b8', fontSize: '11px', fontFamily: 'monospace' }}
+                itemStyle={{ color: '#f8fafc', fontSize: '12px', fontWeight: '600', fontFamily: 'monospace' }}
                 formatter={(value: any) => [`$${value}`, 'Precio']}
               />
               <Area 
