@@ -34,9 +34,9 @@ export default function SideMenu() {
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2 min-w-[16rem]">
-        <NavLink to="/" onClick={closeMenu} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">🏠 Dashboard Principal</NavLink>
-        <NavLink to="/my-account" onClick={closeMenu} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">📈 Mercado Local</NavLink>
-        <NavLink to="/sig-in" onClick={closeMenu} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">🌎 Entorno Macro</NavLink>
+        <NavLink to="/" onClick={() => window.innerWidth < 768 && closeMenu()} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">🏠 Dashboard Principal</NavLink>
+        <NavLink to="/local" onClick={() => window.innerWidth < 768 && closeMenu()} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">📈 Mercado Local</NavLink>
+        <NavLink to="/macro" onClick={() => window.innerWidth < 768 && closeMenu()} className="block px-4 py-2 rounded text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50">🌎 Entorno Macro</NavLink>
       </nav>
     </aside>
   );

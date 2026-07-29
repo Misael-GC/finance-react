@@ -2,9 +2,9 @@ import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { UIProvider } from '../../Context/UIContext';
 import Layout from '../../Components/Layout/Layout';
 import Home from '../Home/Home';
-import MyAccount from '../MyAccount/MyAccount';
+import LocalMarket from '../LocalMarket/LocalMarket';
 import NotFound from '../NotFound/NotFound';
-import SigIn from '../SigIn/SigIn';
+import GlobalMarket from '../GlobalMarket/GlobalMarket';
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -13,8 +13,8 @@ const AppRoutes = () => {
       element: <Layout />,
       children: [
         { index: true, element: <Home /> },
-        { path: '/my-account', element: <MyAccount /> },
-        { path: '/sig-in', element: <SigIn /> },
+        { path: '/local', element: <LocalMarket /> },
+        { path: '/macro', element: <GlobalMarket /> },
         { path: '*', element: <NotFound /> },
       ]
     }

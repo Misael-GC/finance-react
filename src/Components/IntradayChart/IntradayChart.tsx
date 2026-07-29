@@ -5,13 +5,13 @@ import { useAsyncData } from '../../Hooks/useAsyncData';
 import Card from '../Card/Card';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function IntradayChart() {
+export default function IntradayChart({ ticker = 'WALMEX*' }: { ticker?: string }) {
   const { apiToken } = useUI();
 
   // Abstraemos por completo la consulta asíncrona mediante el Hook Genérico
   const { data: chartData, loading, error } = useAsyncData(async () => {
     if (!apiToken) return [];
-    return await marketService.getIntradayData(apiToken, 'WALMEX*');
+    return await marketService.getIntradayData(apiToken, ticker);
   }, [apiToken]);
 
   // Cálculos dinámicos de color (solo si hay datos disponibles)
@@ -21,7 +21,7 @@ export default function IntradayChart() {
   const fillColor = isUp ? 'rgba(52, 211, 153, 0.1)' : 'rgba(248, 113, 113, 0.1)';
 
   return (
-    <Card title="Gráficos Intradía" subtitle="WALMEX* /v2/intradia" titleHref="/intradia">
+    <Card title="Gráficos Intradía" subtitle={`${ticker} /v2/intradia`} titleHref="/intradia">
       <div className="w-full h-[220px] min-w-0 mt-4 relative block">
         
         {/* ================= CONTROL DE ESTADOS DE LA INTERFAZ ================= */}

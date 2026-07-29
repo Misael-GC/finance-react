@@ -110,12 +110,12 @@ export const marketService = {
     }
   },
 
-  async getTopIssuers(token: string): Promise<MarketAssetItem[]> {
+  async getTopIssuers(token: string, mercado: 'local' | 'global' = 'local'): Promise<MarketAssetItem[]> {
     if (!token) throw new Error("API token is required");
 
     try {
       const response = await fetch(
-        `${BASE_URL}/top?token=${token}&variables=suben,bajan&bolsa=BMV&cantidad=5&mercado=local`,
+        `${BASE_URL}/top?token=${token}&variables=suben,bajan&bolsa=BMV&cantidad=5&mercado=${mercado}`,
       );
       if (!response.ok)
         throw new Error(`Error top issuers: ${response.statusText}`);
@@ -154,7 +154,24 @@ export const marketService = {
       const data = await response.json();
       return mapKeyValueResponse(data);
     } catch (error) {
-      console.error("Failed to fetch forex:", error);
+      console.error("Failed to fetch forex data:", error);
+      throw error;
+    }
+  },
+
+  async getForexMXN(token: string): Promise<MarketAssetItem[]> {
+    if (!token) throw new Error("API token is required");
+
+    try {
+      const response = await fetch(`${BASE_URL}/divisas?token=${token}`);
+      if (!response.ok) throw new Error(`Error forex: ${response.statusText}`);
+
+      const data = await response.json();
+      const allDivisas = mapKeyValueResponse(data);
+      // Solo filtrar los cruces contra el Peso Mexicano
+      return allDivisas.filter(d => d.ticker.includes("MXN") || d.ticker.includes("USD"));
+    } catch (error) {
+      console.error("Failed to fetch forex MXN data:", error);
       throw error;
     }
   },
@@ -451,6 +468,67 @@ export const marketService = {
       return [];
     } catch (error) {
       console.error(`Failed to fetch trades for ${emisoraSerie}:`, error);
+      return [];
+    }
+  },
+
+  async getNews(token: string): Promise<{ title: string; source: string; url: string; date: string }[]> {
+    if (!token) throw new Error("API token is required");
+
+    try {
+      const response = await fetch(`${BASE_URL}/noticias?token=${token}`);
+      if (!response.ok) throw new Error(`Error news: ${response.statusText}`);
+
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        return data.map((item: any) => ({
+          title: String(item.titular || item.titulo || "Sin título"),
+          source: String(item.fuente || "Desconocida"),
+          url: String(item.url || "#"),
+          date: String(item.fecha || item.f || ""),
+        }));
+      }
+      return [];
+    } catch (error) {
+      console.error("Failed to fetch news:", error);
+      return [];
+    }
+  },
+
+  async getTasas(token: string): Promise<MarketAssetItem[]> {
+    if (!token) throw new Error("API token is required");
+
+    try {
+      const response = await fetch(`${BASE_URL}/tasas?token=${token}`);
+      if (!response.ok) throw new Error(`Error tasas: ${response.statusText}`);
+
+      const data = await response.json();
+      return mapKeyValueResponse(data);
+    } catch (error) {
+      console.error("Failed to fetch tasas:", error);
+      throw error;
+    }
+  },
+
+  async getCables(token: string): Promise<{ title: string; source: string; url: string; date: string }[]> {
+    if (!token) throw new Error("API token is required");
+
+    try {
+      const response = await fetch(`${BASE_URL}/cables?token=${token}`);
+      if (!response.ok) throw new Error(`Error cables: ${response.statusText}`);
+
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        return data.map((item: any) => ({
+          title: String(item.titular || item.titulo || "Sin título"),
+          source: String(item.emisora || item.fuente || "BMV"),
+          url: String(item.url || "#"),
+          date: String(item.fecha || item.f || ""),
+        }));
+      }
+      return [];
+    } catch (error) {
+      console.error("Failed to fetch cables:", error);
       return [];
     }
   }

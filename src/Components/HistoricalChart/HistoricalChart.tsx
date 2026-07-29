@@ -5,17 +5,17 @@ import { useAsyncData } from '../../Hooks/useAsyncData';
 import Card from '../Card/Card';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
-export default function HistoricalChart() {
+export default function HistoricalChart({ ticker = 'WALMEX*' }: { ticker?: string }) {
   const { apiToken } = useUI();
 
   // Abstraemos por completo la consulta asíncrona mediante nuestro Hook Genérico
   const { data: chartData, loading, error } = useAsyncData(async () => {
     if (!apiToken) return [];
-    return await marketService.getHistoricalData(apiToken, 'WALMEX*');
-  }, [apiToken]);
+    return await marketService.getHistoricalData(apiToken, ticker);
+  }, [apiToken, ticker]);
 
   return (
-    <Card title="Series Históricas" subtitle="WALMEX* /v2/historicos" titleHref="/historicos">
+    <Card title="Rendimiento a 30 Días" subtitle={`${ticker} /v2/historicos`} titleHref="/historicos">
       <div className="w-full h-[160px] min-w-0 mt-4 relative block">
         
         {/* ================= CONTROL DE ESTADOS DE LA INTERFAZ ================= */}
